@@ -1,6 +1,7 @@
 package com.udacity.jdnd.course3.critter.entity;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
@@ -11,7 +12,9 @@ import java.util.List;
 public class Customer extends Named {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Pet> pets = new ArrayList<>();
+    @Column(length = 20)
     private String phoneNumber;
+    @Column(length = 500)
     private String notes;
 
     public String getPhoneNumber() {

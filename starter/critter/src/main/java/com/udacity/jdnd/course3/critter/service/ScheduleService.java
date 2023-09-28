@@ -10,6 +10,8 @@ import com.udacity.jdnd.course3.critter.entity.Schedule;
 import com.udacity.jdnd.course3.critter.repo.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ValidationException;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -27,9 +29,20 @@ public class ScheduleService {
     }
 
     public Schedule save(Schedule schedule, List<Long> employeeIds, List<Long> petIds) {
-        schedule.setEmployees(employeeRepository.findAllById(employeeIds));
-        schedule.setPets(petRepository.findAllById(petIds));
+        List<Employee> employees = employeeRepository.findAllById(employeeIds);
+        checkNonEmpty(employees,"employees");
+        schedule.setEmployees(employees);
+        List<Pet> pets = petRepository.findAllById(petIds);
+        checkNonEmpty(pets,"pets");
+        schedule.setPets(pets);
+        checkNonEmpty(schedule.getActivities(), "activities");
         return scheduleRepository.save(schedule);
+    }
+
+    private void checkNonEmpty(Collection<?> collection, String name) {
+        if (collection == null || collection.isEmpty()) {
+            throw new ValidationException(String.format("Attribute/relation %s cannot be empty", name));
+        }
     }
 
     public List<Schedule> getAll() {

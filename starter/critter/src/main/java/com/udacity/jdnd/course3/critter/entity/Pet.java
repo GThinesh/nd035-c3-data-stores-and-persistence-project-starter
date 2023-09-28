@@ -13,6 +13,7 @@ public class Pet extends Named {
     @JoinColumn(name = "owner_id")
     private Customer owner;
     private LocalDate birthDate;
+    @Column(length = 500)
     private String notes;
 
     public PetType getType() {
